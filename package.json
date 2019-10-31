@@ -1,0 +1,17 @@
+{
+  "name": "module-bundler",
+  "repository": {
+    "url": "https://github.com/Asing1001/module-bundler.git"
+  },
+  "description": "Demo basic concept of the module bundler",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Sing <sing.chen@linecorp.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node bundler.js"
+  },
+  "devDependencies": {
+    "@babel/parser": "^7.6.4"
+  }
+}
