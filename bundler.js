@@ -1,8 +1,9 @@
 const fs = require('fs')
+const config = require('./webpack.config')
 
-function createBundle(entry) {
-  const content = fs.readFileSync(entry, 'utf-8')
-  console.log(content);
+function createAsset(filePath) {
+  const content = fs.readFileSync(filePath, 'utf-8')
+  return content
 }
 
-createBundle('./src/entry.js')
+console.log(createAsset(config.entry))
