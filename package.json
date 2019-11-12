@@ -9,9 +9,16 @@
   "author": "Sing <sing.chen@linecorp.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node bundler.js"
+    "start": "node bundler.js",
+    "webpack": "webpack",
+    "result": "node dist/bundle.js"
+  },
+  "dependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/parser": "^7.7.3"
   },
   "devDependencies": {
-    "@babel/parser": "^7.6.4"
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
   }
 }
