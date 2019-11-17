@@ -19,8 +19,11 @@ const createModule = (filePath) => {
   return {
     id: ID++,
     filePath,
+    // transpiled code, work in most browsers
     code,
+    // Every import declaration ['./foo.js', './bar.js']
     dependencies,
+    // The <path>:<moduleId> map for the module, e.g. { './message.js': 1 }
     dependencyMap: {},
   }
 }
