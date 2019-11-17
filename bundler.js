@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 const { entry, output } = require('./webpack.config')
 const { traverse, transformSync, parseSync } = require('@babel/core')
 
@@ -21,9 +22,28 @@ const createModule = (filePath) => {
     filePath,
     code,
     dependencies,
+    dependencyMap: {}
   }
 }
 
-const result = createModule(entry)
+const resolveDependencyPath = (module, dependency) => {
+  const dirname = path.dirname(module.filePath)
+  return path.join(dirname, dependency)
+}
+
+const createGraph = (filePath) => {
+  const graph = [createModule(filePath)]
+  for (const module of graph) {
+    module.dependencies.forEach(dependency => {
+      const dependencyPath = resolveDependencyPath(module, dependency)
+      const childModule = createModule(dependencyPath)
+      module.dependencyMap[dependency] = childModule.id
+      graph.push(childModule)
+    })
+  }
+  return graph
+}
+
+const result = createGraph(entry)
 
 console.log(result)
