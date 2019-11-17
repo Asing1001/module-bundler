@@ -7,6 +7,8 @@ const { traverse, transformSync, parseSync } = require('@babel/core')
 let ID = 0
 
 const createModule = (filePath) => {
+  const id = ID++
+  const dependencyMap = {}
   const content = fs.readFileSync(filePath, 'utf8')
   const { code } = transformSync(content, { presets: ['@babel/env'] })
   const ast = parseSync(content, { sourceType: 'module' })
@@ -18,11 +20,17 @@ const createModule = (filePath) => {
   })
 
   return {
-    id: ID++,
+    id,
     filePath,
     code,
     dependencies,
-    dependencyMap: {}
+    dependencyMap,
+    toString: () => `${id}: {
+      factory: (require, module, exports) => {
+        ${code}
+      },
+      dependencyMap: ${JSON.stringify(dependencyMap)}
+    }`
   }
 }
 
@@ -44,6 +52,12 @@ const createGraph = (filePath) => {
   return graph
 }
 
-const result = createGraph(entry)
+const packing = (filePath) => {
+  const graph = createGraph(filePath)
+  const modules = graph.map(module => module.toString()).join(',')
+  return modules
+}
+
+const result = packing(entry)
 
 console.log(result)
