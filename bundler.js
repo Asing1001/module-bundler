@@ -5,12 +5,40 @@ const { traverse, transformSync, parseSync } = require('@babel/core')
 
 let ID = 0
 
+const resolveModules = (filePath) => {
+  const modules = [createModule(filePath)]
+  for (const module of modules) {
+    module.dependencies.forEach(dependency => {
+      // TODO: Rescursively add child dependencies
+    })
+  }
+  return modules
+}
+
+// resolve relativePath to fullPath, e.g. ./message.js => src/message.js
+const resolveDependencyPath = (module, dependency) => {
+  const dirname = path.dirname(module.filePath)
+  return path.join(dirname, dependency)
+}
+
+// Create a module, e.g.
+// {
+//   id: 0,
+//   filePath: 'src/entry.js',
+//   code: 'commonjs codes',
+//   dependencies: ['./message.js'],
+//   dependencyMap: {
+//     './message.js': 1
+//   }
+// }
 const createModule = (filePath) => {
   const content = fs.readFileSync(filePath, 'utf8')
+  // transform ES6 modules to commonJS that works in most browsers
   const { code } = transformSync(content, { presets: ['@babel/env'] })
-  const ast = parseSync(content, { sourceType: 'module' })
+  // Abstract syntax tree https://astexplorer.net/#/gist/1e826eba65c32d9bf34795ccfea83cf7/b3039a0f8ecaafb12d15951166cd7b762cd206de
   const dependencies = []
-  traverse(ast, {
+  const abstractSyntaxTree = parseSync(content, { sourceType: 'module' })
+  traverse(abstractSyntaxTree, {
     ImportDeclaration: (declare) => {
       dependencies.push(declare.node.source.value)
     }
@@ -28,27 +56,13 @@ const createModule = (filePath) => {
   }
 }
 
+
 const stringifyModule = (module) => `${module.id}: {
   factory: (require, module, exports) => {
     ${module.code}
   },
   dependencyMap: ${JSON.stringify(module.dependencyMap)}
 }`
-
-const resolveDependencyPath = (module, dependency) => {
-  const dirname = path.dirname(module.filePath)
-  return path.join(dirname, dependency)
-}
-
-const resolveModules = (filePath) => {
-  const modules = [createModule(filePath)]
-  for (const module of modules) {
-    module.dependencies.forEach(dependency => {
-      // TODO: Rescursively add child dependencies
-    })
-  }
-  return modules
-}
 
 const result = resolveModules(entry)
 fs.writeFileSync(path.join(output.path, output.filename), result)
