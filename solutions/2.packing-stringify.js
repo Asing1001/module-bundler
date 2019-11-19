@@ -11,8 +11,12 @@ const result = packing(entry)
 fs.writeFileSync(path.join(output.path, output.filename), result)
 console.log(result)
 
-function packing(file) {
+function packing(entry) {
+  const modules = resolveModules(entry)
+  const modulesString = modules.map(stringifyModule).join(',')
+  return `(function(modules){
 
+  })({${modulesString}})`
 }
 // Recursively resolve module dependencies
 function resolveModules(filePath) {
@@ -22,9 +26,13 @@ function resolveModules(filePath) {
     module.dependencies.forEach(dependency => {
       // TODO: Rescursively add child dependencies
       // 1. Find the filePath from the dependency e.g. ./alertBtn
+      const dependencyPath = resolveDependencyPath(module, dependency)
       // 2. Create the module from filePath
+      const childModule = createModule(dependencyPath)
       // 3. Add the mapping of { dependency: moduleId }
+      module.dependencyMap[dependency] = childModule.id
       // 4. push the module into modules array
+      modules.push(childModule)
 
     })
   }

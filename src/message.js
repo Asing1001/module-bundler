@@ -1,2 +1,1 @@
-// export const message = 'hello world';
-const message = 'hello world';
+export const message = 'hello world';

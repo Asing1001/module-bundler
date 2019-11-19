@@ -6,14 +6,11 @@ const { traverse, transformSync, parseSync } = require('@babel/core')
 // The moduleId start from 0, which is the entry moduleId
 let ID = 0
 
-const result = packing(entry)
+const result = resolveModules(entry)
 // Write the result to ./dist/bundle.js
 fs.writeFileSync(path.join(output.path, output.filename), result)
 console.log(result)
 
-function packing(file) {
-
-}
 // Recursively resolve module dependencies
 function resolveModules(filePath) {
   const entryModule = createModule(filePath)
@@ -22,9 +19,13 @@ function resolveModules(filePath) {
     module.dependencies.forEach(dependency => {
       // TODO: Rescursively add child dependencies
       // 1. Find the filePath from the dependency e.g. ./alertBtn
+      const dependencyPath = resolveDependencyPath(module, dependency)
       // 2. Create the module from filePath
+      const childModule = createModule(dependencyPath)
       // 3. Add the mapping of { dependency: moduleId }
+      module.dependencyMap[dependency] = childModule.id
       // 4. push the module into modules array
+      modules.push(childModule)
 
     })
   }
