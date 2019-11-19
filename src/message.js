@@ -1,3 +1,1 @@
-import {name} from './name.js';
-
-export default `hello ${name}!`;
+export const message = 'hello world';

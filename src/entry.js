@@ -1,3 +1,4 @@
-import message from './message.js';
+import alertBtn from './alertBtn';
 
-console.log(message);
+const app = document.querySelector('.app')
+app.appendChild(alertBtn)
