@@ -2,8 +2,8 @@
 
 ## Prerequsite
 
-NodeJS - https://nodejs.org/
-Git - https://git-scm.com/downloads
+- NodeJS - https://nodejs.org/
+- Git - https://git-scm.com/downloads
 
 ## Getting start
 
