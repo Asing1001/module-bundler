@@ -6,14 +6,11 @@ const { traverse, transformSync, parseSync } = require('@babel/core')
 // The moduleId start from 0, which is the entry moduleId
 let ID = 0
 
-const result = packing(entry)
+const result = resolveModules(entry)
 // Write the result to ./dist/bundle.js
 fs.writeFileSync(path.join(output.path, output.filename), result)
 console.log(result)
 
-function packing(file) {
-
-}
 // Recursively resolve module dependencies
 function resolveModules(filePath) {
   const entryModule = createModule(filePath)
