@@ -1,5 +1,7 @@
 # Build a module bundler from scratch
 
+Demonstrate the concept of a module bundler, (slideshare)[https://www.slideshare.net/SingMingChen/create-a-module-bundler-from-scratch-198784968]
+
 ## Prerequsite
 
 - NodeJS - https://nodejs.org/
